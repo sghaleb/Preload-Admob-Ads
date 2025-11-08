@@ -53,10 +53,10 @@ class AdRepoImpl extends AdRepo {
 
   /// Displays the app open ad on splash screen using GoogleAppOpenOnSplash instance
   @override
-  showOpenAppOnSplash({
+  Future<void> showOpenAppOnSplash({
     required Function({AppOpenAd? ad, AdError? error}) callBack,
-  }) {
-    return GoogleAppOpenOnSplash.instance.loadAndShowSplashAd(
+  }) async {
+    return await GoogleAppOpenOnSplash.instance.loadAndShowSplashAd(
       callBack: callBack,
     );
   }
@@ -75,17 +75,35 @@ class AdRepoImpl extends AdRepo {
 
   /// Loads the rewarded ad using RewardAd instance
   @override
-  void loadRewardedAd() {
-    return RewardAd.instance.load();
+  Future<void> loadRewardedAd() async {
+    return await RewardAd.instance.load();
   }
 
   /// Displays the rewarded ad using RewardAd instance
   @override
-  void showRewardedAd({
+  Future<void> showRewardedAd({
     required Function({RewardedAd? ad, AdError? error}) callBack,
     required Function(AdWithoutView ad, RewardItem reward) onReward,
-  }) {
-    return RewardAd.instance.showRewarded(
+  }) async {
+    await RewardAd.instance.showRewarded(
+      callBack: callBack,
+      onReward: onReward,
+    );
+  }
+
+  /// Loads the rewarded ad using RewardAd instance
+  // @override
+  Future<void> loadRewardedInterAd() async {
+    return await RewardInterstitialAd.instance.load();
+  }
+
+  /// Displays the rewarded ad using RewardAd instance
+  // @override
+  Future<void> showRewardedInterstitialAd({
+    required Function({RewardedInterstitialAd? ad, AdError? error}) callBack,
+    required Function(AdWithoutView ad, RewardItem reward) onReward,
+  }) async {
+    await RewardInterstitialAd.instance.showRewardedInterstitial(
       callBack: callBack,
       onReward: onReward,
     );

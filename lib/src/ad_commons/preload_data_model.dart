@@ -35,6 +35,8 @@ class AdIDS {
   /// Rewarded ad ID.
   final String? rewardedId;
 
+  final String? rewrdedInterstitialId;
+
   /// Constructor for [AdIDS].
   AdIDS({
     this.appOpenId,
@@ -42,6 +44,7 @@ class AdIDS {
     this.nativeId,
     this.interstitialId,
     this.rewardedId,
+    this.rewrdedInterstitialId,
   });
 }
 
@@ -49,6 +52,8 @@ class AdIDS {
 class AdCounter {
   /// Number of times to show interstitial ads.
   final int? interstitialCounter;
+
+  final int? rewardedInterstitialCounter;
 
   /// Number of times to show rewarded ads.
   final int? rewardedCounter;
@@ -59,6 +64,7 @@ class AdCounter {
   /// Constructor for [AdCounter].
   AdCounter({
     this.interstitialCounter,
+    this.rewardedInterstitialCounter,
     this.rewardedCounter,
     this.nativeCounter,
   });
@@ -87,11 +93,15 @@ class AdFlag {
   /// Show rewarded ad.
   final bool? showRewarded;
 
+  /// Show rewarded ad.
+  final bool? showRewardedInterstitial;
+
   /// Constructor for [AdFlag].
   AdFlag({
     this.showAd,
     this.showBanner,
     this.showInterstitial,
+    this.showRewardedInterstitial,
     this.showNative,
     this.showSplashAd,
     this.showOpenApp,

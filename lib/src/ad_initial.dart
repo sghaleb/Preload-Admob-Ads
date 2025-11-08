@@ -27,29 +27,29 @@ class PreloadGoogleAds {
 
   /// Displays a native ad.
   /// Pass [isSmall] as true for small ad, false for medium. Defaults to medium.
-  showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
+  Widget showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
     return _adManager.showNativeAd(nativeADType: nativeADType);
   }
 
   /// Displays the open app ad (not the splash ad).
-  showOpenApp() {
-    return _adManager.showOpenApp();
+  void showOpenApp() {
+    _adManager.showOpenApp();
   }
 
   /// Displays a banner ad if available.
-  showBannerAd() {
+  Widget showBannerAd() {
     return _adManager.showBannerAd();
   }
 
   /// Shows the ad counter, typically for debugging or development.
   /// Defaults to showing the counter.
-  showAdCounter({bool? showCounter}) {
+  Widget showAdCounter({bool? showCounter}) {
     return _adManager.showAdCounter(showCounter: showCounter);
   }
 
   /// Displays an interstitial ad.
   /// Returns the [InterstitialAd] or [AdError] through the [callBack].
-  showInterstitialAd({
+  void showInterstitialAd({
     required Function(InterstitialAd? ad, AdError? error) callBack,
   }) {
     return _adManager.showInterstitialAd(callBack: callBack);
@@ -58,10 +58,27 @@ class PreloadGoogleAds {
   /// Displays a rewarded ad.
   /// Returns the [RewardedAd] or [AdError] via [callBack],
   /// and handles the reward logic via [onReward].
-  showRewardedAd({
+  Future<void> showRewardedAd({
     required void Function(RewardedAd? ad, AdError? error) callBack,
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
-  }) {
-    return _adManager.showRewardedAd(callBack: callBack, onReward: onReward);
+  }) async {
+    await _adManager.showRewardedAd(callBack: callBack, onReward: onReward);
+  }
+
+  Future<String?> getPlatformVersion() async {
+    return '1.0';
+  }
+
+  /// Displays a rewarded ad.
+  /// Returns the [RewardedInterstitialAd] or [AdError] via [callBack],
+  /// and handles the reward logic via [onReward].
+  Future<void> showRewardedInterstitialAd({
+    required void Function(RewardedInterstitialAd? ad, AdError? error) callBack,
+    required void Function(AdWithoutView ad, RewardItem reward) onReward,
+  }) async {
+    await _adManager.showRewardedInterstitialAd(
+      callBack: callBack,
+      onReward: onReward,
+    );
   }
 }

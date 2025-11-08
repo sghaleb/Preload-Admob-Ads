@@ -37,6 +37,7 @@ class AdManager {
       _loadOpenAppAd();
       _loadInterAd();
       _loadRewardedAd();
+      _loadRewardedInterAd();
     }
   }
 
@@ -97,6 +98,13 @@ class AdManager {
     }
   }
 
+  /// Loads the rewarded ad if enabled in the ad configuration.
+  void _loadRewardedInterAd() {
+    if (shouldShowRewardedInterAd) {
+      PlugAd.getInstance().loadRewardedInterAd();
+    }
+  }
+
   /// Sets the callback function to be invoked when the splash ad is ready or fails.
   void setSplashAdCallback(Function(AppOpenAd? ad, AdError? error) callback) {
     _splashAdCallback = callback;
@@ -105,30 +113,30 @@ class AdManager {
   /// Below methods are used to show various types of ads
 
   /// Shows a native ad. Optionally specify if it is a small or medium-sized ad.
-  showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
+  Widget showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
     return PlugAd.getInstance().showNative(nativeADType: nativeADType);
   }
 
   /// Shows the open app ad.
-  showOpenApp() {
-    return PlugAd.getInstance().showOpenAppAd();
+  void showOpenApp() {
+    PlugAd.getInstance().showOpenAppAd();
   }
 
   /// Shows the banner ad.
-  showBannerAd() {
+  Widget showBannerAd() {
     return PlugAd.getInstance().showBannerAd();
   }
 
   /// Displays the ad counter (if available).
-  showAdCounter({bool? showCounter}) {
+  Widget showAdCounter({bool? showCounter}) {
     return PlugAd.getInstance().showAdCounter(showCounter ?? true);
   }
 
   /// Shows the interstitial ad and invokes the provided callback with the ad or error.
-  showInterstitialAd({
+  void showInterstitialAd({
     required Function(InterstitialAd? ad, AdError? error) callBack,
   }) {
-    return PlugAd.getInstance().showInterAd(
+    PlugAd.getInstance().showInterAd(
       callBack: ({InterstitialAd? ad, AdError? error}) {
         callBack(ad, error);
       },
@@ -136,12 +144,25 @@ class AdManager {
   }
 
   /// Shows the rewarded ad and invokes the provided callbacks with the ad, error, and reward information.
-  showRewardedAd({
+  Future<void> showRewardedAd({
     required void Function(RewardedAd? ad, AdError? error) callBack,
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
-  }) {
-    return PlugAd.getInstance().showRewardedAd(
+  }) async {
+    await PlugAd.getInstance().showRewardedAd(
       callBack: ({RewardedAd? ad, AdError? error}) {
+        callBack(ad, error);
+      },
+      onReward: onReward,
+    );
+  }
+
+  /// Shows the rewarded ad and invokes the provided callbacks with the ad, error, and reward information.
+  Future<void> showRewardedInterstitialAd({
+    required void Function(RewardedInterstitialAd? ad, AdError? error) callBack,
+    required void Function(AdWithoutView ad, RewardItem reward) onReward,
+  }) async {
+    await PlugAd.getInstance().showRewardedInterstitialAd(
+      callBack: ({RewardedInterstitialAd? ad, AdError? error}) {
         callBack(ad, error);
       },
       onReward: onReward,

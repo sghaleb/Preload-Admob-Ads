@@ -17,10 +17,10 @@ class RewardAd {
       0; // Counter to track the number of times the ad has been shown.
 
   /// Loads a rewarded ad with the given unit ID and configuration.
-  void load() {
+  Future<void> load() async {
     try {
       _isRewardedAdLoaded = false;
-      RewardedAd.load(
+      await RewardedAd.load(
         adUnitId: unitIDRewarded, // ID for the rewarded ad unit.
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
@@ -34,7 +34,9 @@ class RewardAd {
           },
           // Called if the ad fails to load.
           onAdFailedToLoad: (LoadAdError error) {
-            AdStats.instance.rewardedFailed
+            AdStats
+                .instance
+                .rewardedFailed
                 .value++; // Increment ad load failure count.
             _rewardedAd = null;
             _isRewardedAdLoaded = false;
@@ -47,10 +49,10 @@ class RewardAd {
   }
 
   /// Shows the rewarded ad if it is loaded and the conditions are met.
-  void showRewarded({
+  Future<void> showRewarded({
     required Function({RewardedAd? ad, AdError? error}) callBack,
     required Function(AdWithoutView ad, RewardItem reward) onReward,
-  }) {
+  }) async {
     if (shouldShowRewardedAd) {
       // Check if rewarded ad should be shown.
       // Check if the ad is loaded and the counter has reached the limit.
@@ -58,7 +60,6 @@ class RewardAd {
           _rewardedAd != null &&
           counter >= getRewardedCounter) {
         counter = 0; // Reset the counter after showing the ad.
-
         _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
           // Called when the ad is dismissed.
           onAdDismissedFullScreenContent: (ad) {
@@ -82,7 +83,7 @@ class RewardAd {
         );
 
         // Show the rewarded ad and handle the reward.
-        _rewardedAd!.show(
+        await _rewardedAd!.show(
           onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
             onReward(ad, reward); // Handle the reward when the user earns it.
           },

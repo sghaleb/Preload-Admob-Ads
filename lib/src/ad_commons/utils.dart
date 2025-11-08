@@ -25,6 +25,7 @@ AdConfigData preData = AdConfigData(
     showNative: true,
     showOpenApp: true,
     showRewarded: true,
+    showRewardedInterstitial: true,
     showSplashAd: false,
   ),
   nativeADLayout: NativeADLayout(
@@ -47,8 +48,8 @@ AdConfigData preData = AdConfigData(
 
 /// Sets the configuration data for ads, allowing custom values for each ad type.
 /// Uses default values from [preData] if no configuration is provided.
-setConfigData(AdConfigData? adConfig) async {
-  await setAdStyleData(adConfig?.nativeADLayout?.customNativeADStyle);
+Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
+  // await setAdStyleData(adConfig?.nativeADLayout?.customNativeADStyle);
   return AdConfigData(
     adIDs: AdIDS(
       appOpenId: adConfig?.adIDs?.appOpenId ?? preData.adIDs?.appOpenId,
@@ -75,6 +76,8 @@ setConfigData(AdConfigData? adConfig) async {
       showOpenApp: adConfig?.adFlag?.showOpenApp ?? preData.adFlag?.showOpenApp,
       showRewarded:
           adConfig?.adFlag?.showRewarded ?? preData.adFlag?.showRewarded,
+      showRewardedInterstitial: adConfig?.adFlag?.showRewardedInterstitial ??
+          preData.adFlag?.showRewardedInterstitial,
       showSplashAd:
           adConfig?.adFlag?.showSplashAd ?? preData.adFlag?.showSplashAd,
     ),
@@ -144,8 +147,10 @@ class AdStats {
 
   /// Statistics for Rewarded Ads
   final ValueNotifier<int> rewardedLoad = ValueNotifier(0);
+  final ValueNotifier<int> rewardedInterstitialLoad = ValueNotifier(0);
   final ValueNotifier<int> rewardedImp = ValueNotifier(0);
   final ValueNotifier<int> rewardedFailed = ValueNotifier(0);
+  final ValueNotifier<int> rewardedInterstitialFailed = ValueNotifier(0);
 
   /// Statistics for Small Native Ads
   final ValueNotifier<int> nativeLoadS = ValueNotifier(0);
@@ -213,6 +218,10 @@ String get unitIDNative => config.adIDs?.nativeId ?? AdTestIds.native;
 /// Retrieves the Rewarded Ad Unit ID.
 String get unitIDRewarded => config.adIDs?.rewardedId ?? AdTestIds.rewarded;
 
+/// Retrieves the Rewarded Ad Unit ID.
+String get unitIDRewardedInterstitial =>
+    config.adIDs?.rewrdedInterstitialId ?? AdTestIds.rewardedInterstitial;
+
 /// Determines if any ads should be shown based on flags.
 bool get shouldShowAd => config.adFlag?.showAd == true;
 
@@ -231,6 +240,11 @@ bool get shouldShowBannerAd =>
 /// Determines if interstitial ads should be shown.
 bool get shouldShowInterAd =>
     config.adFlag?.showInterstitial == true && config.adFlag?.showAd == true;
+
+/// Determines if rewarded interstitial ads should be shown.
+bool get shouldShowRewardedInterAd =>
+    config.adFlag?.showRewardedInterstitial == true &&
+    config.adFlag?.showAd == true;
 
 /// Determines if rewarded ads should be shown.
 bool get shouldShowRewardedAd =>

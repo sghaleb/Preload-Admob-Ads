@@ -25,3 +25,4 @@ export 'src/native_ad/load_native.dart';
 export 'src/native_ad/native_ad_style.dart';
 export 'src/native_ad/show_native.dart';
 export 'src/rewarded_ad/rewarded_ad.dart';
+export 'src/ad_repo/rewarded_interstitial_ad/rewarded_interstitial_ad.dart';
